@@ -3,10 +3,13 @@ package com.example.examples;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 
+// This is how the engine would actually be used
 public class EngineTest {
     public static void main(String[] args) {
+        //Initializing the engine
         GameEngine e = new GameEngine();
 
+        //Just a smiley face that moves with arrow keys
         Thing t = new Thing(new Vector(), "smile.jpg") {
             @Override
             public void update() {
@@ -27,6 +30,7 @@ public class EngineTest {
         e.addLayer("smiley");
         e.getLayer("smiley").add(t);
 
+        // Launches the game
         new Thread(e).start();
     }
 }

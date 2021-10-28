@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 
 import java.util.HashMap;
 
+//A basic "thing" that will be in the game
 public abstract class Thing implements Drawable {
     private Vector position;
     private String texture;

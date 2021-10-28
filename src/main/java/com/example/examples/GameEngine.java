@@ -17,11 +17,20 @@ import java.util.*;
 
 public class GameEngine extends Application implements Runnable {
     //These need to be static because they will get reset otherwise when the game engine is started
-    private static Map<String, List<Drawable>> layers = new HashMap<>();
+
+    //Map to different things to draw, LinkedHashMap to maintain order of insertion
+    private static Map<String, List<Drawable>> layers = new LinkedHashMap<>();
+
+    //Holds loaded textures so things won't load twice
     private static HashMap<String, Image> textures = new HashMap<>();
+
+    //The keys pressed at the moment
     private static HashSet<KeyCode> keysPressed = new HashSet<>();
 
+    //Needed for drawing
     private GraphicsContext ctx;
+
+    //Window width and height
     private int width;
     private int height;
 
@@ -82,10 +91,6 @@ public class GameEngine extends Application implements Runnable {
                 d.draw(ctx, textures);
             }
         }
-    }
-
-    public static void main(String[] args) {
-        launch();
     }
 
     @Override
