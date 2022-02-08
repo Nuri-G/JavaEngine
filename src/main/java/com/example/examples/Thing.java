@@ -2,39 +2,43 @@ package com.example.examples;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.transform.Rotate;
+import org.jbox2d.dynamics.Body;
 
 import java.util.HashMap;
 
 //A basic "thing" that will be in the game
 public abstract class Thing implements Drawable {
-    private Vector position;
+    public Body body;
+    private float width;
+    private float height;
     private String texture;
 
-    public Thing(Vector position, String texture) {
-        this.position = position;
+    public Thing(Body body, String texture, float width, float height) {
         this.texture = texture;
-    }
-
-    public Thing(String texture) {
-        position = new Vector();
-        this.texture = texture;
+        this.width = width;
+        this.height = height;
+        this.body = body;
     }
 
     public void setTexture(String texture) {
         this.texture = texture;
     }
 
-    public Vector getPosition() {
-        return position;
+    public float getWidth() {
+        return width;
     }
 
-    public void setPosition(Vector position) {
-        this.position = position;
+    public void setWidth(float width) {
+        this.width = width;
     }
 
-    public void translate(Vector transform) {
-        position.x += transform.x;
-        position.y += transform.y;
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
     }
 
     public abstract void update();
@@ -45,6 +49,10 @@ public abstract class Thing implements Drawable {
         if(!textures.containsKey(texture)) {
             textures.put(texture, new Image(texture));
         }
-        gc.drawImage(textures.get(texture), position.x, position.y);
+        gc.save();
+        Rotate r = new Rotate(body.getAngle(), body.getPosition().x * 10 + width, body.getPosition().y * 10 + height);
+        gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+        gc.drawImage(textures.get(texture), body.getPosition().x * 10, body.getPosition().y * 10, width*2, height*2);
+        gc.restore();
     }
 }

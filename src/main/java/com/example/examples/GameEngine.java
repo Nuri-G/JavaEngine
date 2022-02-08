@@ -10,7 +10,12 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.World;
 
 import java.io.IOException;
 import java.util.*;
@@ -26,6 +31,9 @@ public class GameEngine extends Application implements Runnable {
 
     //The keys pressed at the moment
     private static HashSet<KeyCode> keysPressed = new HashSet<>();
+
+    //The Box2D world
+    private static World world = new World(new Vec2());
 
     //Needed for drawing
     private GraphicsContext ctx;
@@ -55,16 +63,32 @@ public class GameEngine extends Application implements Runnable {
         return layers.get(layer);
     }
 
+    public Body addBody(BodyDef def) {
+        return world.createBody(def);
+    }
+
     @Override
     public void start(Stage stage) {
         Canvas canvas = new Canvas(width, height);
         ctx = canvas.getGraphicsContext2D();
+        world.setGravity(new Vec2(0, 0));
 
         //This is the actual game loop
         AnimationTimer timer = new AnimationTimer() {
+            private long lastUpdate;
             @Override
-            public void handle(long l) {
+            public void start() {
+                lastUpdate = System.nanoTime();
+                super.start();
+            }
+
+            @Override
+            public void handle(long now) {
+                long delta = now - lastUpdate;
+//                float worldDelta = delta / 1e6f;
+                world.step(1f/60f, 2, 6);
                 draw();
+                lastUpdate = now;
             }
         };
 
